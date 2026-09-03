@@ -9,9 +9,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>backend-platform/api-gateway</module>
-        <module>backend-platform/config-server</module>
-        <module>backend-platform/eureka-server</module>
+        <module>api-gateway</module>
+        <module>config-server</module>
+        <module>eureka-server</module>
     </modules>
     
 </project>
