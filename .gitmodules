@@ -1,9 +1,9 @@
 [submodule "eureka-server"]
 	path = eureka-server
-	url = https://github.com/tharusenevirathne/eureka-server.git
+	url = https://github.com/TharuSenevirathne/eureka-server.git
 [submodule "config-server"]
 	path = config-server
-	url = https://github.com/tharusenevirathne/config-server.git
+	url = https://github.com/TharuSenevirathne/config-server.git
 [submodule "api-gateway"]
 	path = api-gateway
-	url = https://github.com/tharusenevirathne/api-gateway.git
+	url = https://github.com/TharuSenevirathne/api-gateway.git
