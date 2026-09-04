@@ -31,5 +31,8 @@ jobs:
           source ~/.bashrc &&
           mvn clean package -DskipTests'"
 
+      - name: stop the vm-platform-seed instance
+        run: gcloud compute instances stop vm-platform-seed --zone=asia-southeast1-b
+
 
 
