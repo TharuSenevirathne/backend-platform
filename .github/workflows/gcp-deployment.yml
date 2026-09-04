@@ -41,3 +41,10 @@
         - name: Delete the image
           run: |
             gcloud compute images delete vm-platform-seed-boot-image-v2 
+
+        - name: Create a new image with the previous image name
+          run: |
+            gcloud compute images create vm-platform-seed-boot-image-v2 \
+             --source-disk=vm-platform-seed \
+              --source-disk-zone=asia-southeast1-b \
+            --storage-location=asia-southeast1
