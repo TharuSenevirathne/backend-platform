@@ -1,38 +1,40 @@
-name: eca-final backend-platform GCP Deployment
-on: push
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  name: eca-final backend-platform GCP Deployment
 
-    permissions:
-      contents: read
-      id-token: write
+  on: push
 
-    steps:
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
 
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v3
+      permissions:
+        contents: read
+        id-token: write
 
+      steps:
+        - name: Authenticate to Google Cloud
+          uses: google-github-actions/auth@v3
+          with:
+            workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+            service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+            project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: start the vm-platform-seed
-        run: gcloud compute instances start vm-platform-seed --zone=asia-southeast1-b
+        - name: Set up Google Cloud SDK
+          uses: google-github-actions/setup-gcloud@v3
 
-      - name: connect with the vm-platform-seed thorugh ssh and pull the latest code and build the backend-platform
-        run: gcloud compute ssh tharusanduni33@vm-platform-seed --zone=asia-southeast1-b --command="echo 'Connected to vm-platform-seed successfully' &&
-          cd backend-platform &&
-          git pull --recurse-submodules &&
-          source ~/.bashrc &&
-          mvn clean package -DskipTests'"
+        - name: Start vm-platform-seed
+          run: |
+            gcloud compute instances start vm-platform-seed \
+              --zone=asia-southeast1-b
 
-      - name: stop the vm-platform-seed instance
-        run: gcloud compute instances stop vm-platform-seed --zone=asia-southeast1-b
+        - name: Connect to vm-platform-seed, pull latest code and build
+          run: |
+            gcloud compute ssh tharusanduni33@vm-platform-seed \
+              --zone=asia-southeast1-b \
+              --command="cd ~/backend-platform && git pull --recurse-submodules && source ~/.bashrc && mvn clean package -DskipTests"
 
-
-
+        - name: Stop vm-platform-seed instance
+          run: |
+            gcloud compute instances stop vm-platform-seed \
+              --zone=asia-southeast1-b
+    
