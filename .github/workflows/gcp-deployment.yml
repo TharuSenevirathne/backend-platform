@@ -8,5 +8,8 @@ jobs:
       - name: first step of Deployment
         run: echo "Starting deployment to GCP"
 
+      - name: checkout repository
+        uses: actions/checkout@v6
+
       - name: second step of Deployment
         run: echo "Finalizing deployment to GCP"
