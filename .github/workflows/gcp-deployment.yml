@@ -49,3 +49,14 @@
              --source-disk=vm-platform-seed \
               --source-disk-zone=asia-southeast1-b \
             --storage-location=asia-southeast1
+
+        - name: Update the instance template with the new image
+          run: |
+            gcloud beta compute instance-groups managed rolling-action start-update mig-platform \
+            --region=asia-southeast1 \
+            --type=proactive \
+             --max-unavailable=3 \
+            --minimal-action=replace \
+            --replacement-method=recreate \
+            --max-surge=0 \
+            --version=template=projects/eca-final-507503/regions/asia-southeast1/instanceTemplates/temp-vm-platform-seed-v2,name=0-1788544173975
