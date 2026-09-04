@@ -25,7 +25,11 @@ jobs:
         run: gcloud compute instances start vm-platform-seed --zone=asia-southeast1-b
 
       - name: connect with the vm-platform-seed thorugh ssh and pull the latest code and build the backend-platform
-        run: gcloud compute ssh tharusanduni33@vm-platform-seed --zone=asia-southeast1-b --command="echo 'Connected to vm-platform-seed successfully' && cd backend-platform && git pull --recurse-submodules && mvn clean package -DskipTests'"
+        run: gcloud compute ssh tharusanduni33@vm-platform-seed --zone=asia-southeast1-b --command="echo 'Connected to vm-platform-seed successfully' &&
+          cd backend-platform &&
+          git pull --recurse-submodules &&
+          source ~/.bashrc &&
+          mvn clean package -DskipTests'"
 
 
 
