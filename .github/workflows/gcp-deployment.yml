@@ -1,4 +1,4 @@
-  ```yaml
+
   name: eca-final backend-platform GCP Deployment
 
   on:
@@ -111,4 +111,4 @@
               --max-surge=0 \
               --version=template=projects/eca-final-507503/regions/asia-southeast1/instanceTemplates/temp-vm-platform-seed-v2,name=0-1788544173975 \
               --quiet
-    ```
+  
