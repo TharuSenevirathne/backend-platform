@@ -24,5 +24,8 @@ jobs:
       - name: start the vm-platform-seed
         run: gcloud compute instances start vm-platform-seed --zone=asia-southeast1-b
 
+      - name: connect with the vm-platform-seed thorugh ssh
+        run: gcloud compute ssh vm-platform-seed --zone=asia-southeast1-b --command="echo 'Connected to vm-platform-seed'"
+
 
 
