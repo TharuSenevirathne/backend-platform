@@ -17,8 +17,4 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: checkout repository
-        uses: actions/checkout@v6
 
-      - name: second step of Deployment
-        run: echo "Finalizing deployment to GCP"
