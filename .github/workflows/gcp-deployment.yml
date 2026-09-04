@@ -1,7 +1,14 @@
-
+  ```yaml
   name: eca-final backend-platform GCP Deployment
 
-  on: push
+  on:
+    push:
+      branches:
+        - main
+
+  concurrency:
+    group: backend-platform-deployment
+    cancel-in-progress: false
 
   jobs:
     deploy:
@@ -12,6 +19,7 @@
         id-token: write
 
       steps:
+
         - name: Authenticate to Google Cloud
           uses: google-github-actions/auth@v3
           with:
@@ -24,8 +32,48 @@
 
         - name: Start vm-platform-seed
           run: |
-            gcloud compute instances start vm-platform-seed \
-              --zone=asia-southeast1-b
+            for i in 1 2 3 4 5
+            do
+              echo "Attempt $i to start vm-platform-seed..."
+            
+              if gcloud compute instances start vm-platform-seed \
+                --zone=asia-southeast1-b \
+                --quiet; then
+                echo "VM start command succeeded."
+                break
+              fi
+            
+              if [ "$i" -eq 5 ]; then
+                echo "Failed to start VM after 5 attempts."
+                exit 1
+              fi
+            
+              echo "Start failed. Waiting 20 seconds before retry..."
+              sleep 20
+            done
+
+        - name: Wait for vm-platform-seed
+          run: |
+            for i in {1..30}
+            do
+              STATUS=$(gcloud compute instances describe vm-platform-seed \
+                --zone=asia-southeast1-b \
+                --format="get(status)")
+            
+              echo "VM status: $STATUS"
+            
+              if [ "$STATUS" = "RUNNING" ]; then
+                echo "VM is running."
+                break
+              fi
+            
+              if [ "$i" -eq 30 ]; then
+                echo "VM did not reach RUNNING state."
+                exit 1
+              fi
+            
+              sleep 10
+            done
 
         - name: Connect to vm-platform-seed, pull latest code and build
           run: |
@@ -36,27 +84,31 @@
         - name: Stop vm-platform-seed instance
           run: |
             gcloud compute instances stop vm-platform-seed \
-              --zone=asia-southeast1-b
+              --zone=asia-southeast1-b \
+              --quiet
 
         - name: Delete the image
           run: |
-            gcloud compute images delete vm-platform-seed-boot-image-v2
+            gcloud compute images delete vm-platform-seed-boot-image-v2 \
+              --quiet
           continue-on-error: true
 
         - name: Create a new image with the previous image name
           run: |
             gcloud compute images create vm-platform-seed-boot-image-v2 \
-             --source-disk=vm-platform-seed \
+              --source-disk=vm-platform-seed \
               --source-disk-zone=asia-southeast1-b \
-            --storage-location=asia-southeast1
+              --storage-location=asia-southeast1
 
         - name: Update the instance template with the new image
           run: |
-            gcloud beta compute instance-groups managed rolling-action start-update mig-platform \
-            --region=asia-southeast1 \
-            --type=proactive \
-             --max-unavailable=3 \
-            --minimal-action=replace \
-            --replacement-method=recreate \
-            --max-surge=0 \
-            --version=template=projects/eca-final-507503/regions/asia-southeast1/instanceTemplates/temp-vm-platform-seed-v2,name=0-1788544173975
+            gcloud compute instance-groups managed rolling-action start-update mig-platform \
+              --region=asia-southeast1 \
+              --type=proactive \
+              --max-unavailable=3 \
+              --minimal-action=replace \
+              --replacement-method=recreate \
+              --max-surge=0 \
+              --version=template=projects/eca-final-507503/regions/asia-southeast1/instanceTemplates/temp-vm-platform-seed-v2,name=0-1788544173975 \
+              --quiet
+    ```
