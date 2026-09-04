@@ -1,0 +1,12 @@
+name: eca-final backend-platform GCP Deployment
+on: push
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: first step of Deployment
+        run: echo "Starting deployment to GCP"
+
+      - name: second step of Deployment
+        run: echo "Finalizing deployment to GCP"
