@@ -21,4 +21,8 @@ jobs:
         uses: google-github-actions/setup-gcloud@v3
 
 
+      - name: start the vm-platform-seed
+        run: gcloud compute instances start vm-platform-seed
+
+
 
