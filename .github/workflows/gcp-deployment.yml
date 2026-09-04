@@ -37,4 +37,7 @@
           run: |
             gcloud compute instances stop vm-platform-seed \
               --zone=asia-southeast1-b
-    
+
+        - name: Delete the image
+          run: |
+            gcloud compute images delete vm-platform-seed-boot-image-v2
