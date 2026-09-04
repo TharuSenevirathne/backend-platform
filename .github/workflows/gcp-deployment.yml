@@ -40,7 +40,8 @@
 
         - name: Delete the image
           run: |
-            gcloud compute images delete vm-platform-seed-boot-image-v2 
+            gcloud compute images delete vm-platform-seed-boot-image-v2
+          continue-on-error: true
 
         - name: Create a new image with the previous image name
           run: |
