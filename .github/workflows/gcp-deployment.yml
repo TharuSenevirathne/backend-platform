@@ -40,4 +40,4 @@
 
         - name: Delete the image
           run: |
-            gcloud compute images delete vm-platform-seed-boot-image-v2
+            gcloud compute images delete vm-platform-seed-boot-image-v2 
